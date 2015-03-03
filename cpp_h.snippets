@@ -23,12 +23,30 @@
 #		matrix
 #		biginteger
 #		mod int
+#			divide
+#			long long
 #		eps float
 
+
 snippet main "" b
-#include<cstdio>
+#include <cstdio>
+#include <cassert>
+#include <cstdlib>
+#include <cstring>
 
 #define MAXX ${1:100111}
+class pii
+{
+	public:
+		int x,y;
+		pii(){}
+		pii(int a,int b):x(a),y(b){}
+		pii operator-(const pii &i)const {return pii(x-i.x,y-i.y);}
+		pii operator+(const pii &i)const {return pii(x+i.x,y+i.y);}
+		bool operator<(const pii &i)const{return x!=i.x?x<i.x:y<i.y;}
+		void input(){scanf("%d %d",&x,&y);}
+		void print()const{printf("(%d %d)",x,y);}
+};
 int i,j,k,l,r,m,n;
 int the[MAXX];
 
@@ -37,6 +55,11 @@ int main()
 	${0}
 	return 0;
 }
+endsnippet
+
+snippet for "for(i=0;i<n;++i)"
+for(${1:i}=0;$1<${2:n};${3:++$1})
+	${0}
 endsnippet
 
 snippet for1 "for(i=1;i<=n;++i)"
@@ -486,4 +509,42 @@ public:
 		return re;
 	}
 };
+endsnippet
+
+snippet modint "" b
+template<int m>class mod_int
+{
+	public:
+		int val;
+		mod_int():val(0){}
+		mod_int(int a):val((a%m+m)%m){}
+		mod_int operator+(const mod_int &i)const{return (val+i.val)%m;}
+		mod_int operator-(const mod_int &i)const{return (val-i.val+m)%m;}
+		mod_int operator*(const mod_int &i)const{return (val*i.val)%m;}
+		mod_int operator=(const int a){val=a; return *this;}
+		mod_int operator+=(const mod_int a){val=(val+a.val)%m; return *this;}
+		mod_int operator*=(const mod_int a){val=(val*a.val)%m; return *this;}
+		mod_int operator-=(const mod_int a){val=(val-a.val+m)%m; return *this;}
+		mod_int operator^(int n)const
+		{
+			assert(n>=0);
+			mod_int re(1);
+			for(mod_int a(val);n;a*=a,n>>=1)
+				if(n&1)
+					re*=a;
+			return re;
+		}
+};
+endsnippet
+
+snippet power "" b
+template<class T>T power(T a,int n)
+{
+	assert(n>=0);
+	T re(1);
+	for(;n;a*=a,n>>=1)
+		if(n&1)
+			re*=a;
+	return re;
+}
 endsnippet
