@@ -24,17 +24,30 @@
 #		biginteger
 #		mod int
 #			divide
-#			long long
-#		eps float
 
 
 snippet main "" b
-#include <cstdio>
+#include <algorithm>
+#include <bitset>
 #include <cassert>
+#include <cmath>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <ctime>
+#include <deque>
+#include <iterator>
+#include <list>
+#include <map>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <vector>
 
 #define MAXX ${1:100111}
+#define mod 1000000007ll
+typedef long long ll;
 class pii
 {
 	public:
@@ -47,7 +60,24 @@ class pii
 		void input(){scanf("%d %d",&x,&y);}
 		void print()const{printf("(%d %d)",x,y);}
 };
-int i,j,k,l,r,m,n;
+template<typename T> struct number_iterator : std::iterator<std::random_access_iterator_tag, T>
+{
+	T v;
+	number_iterator(T _v) : v(_v) {}
+	operator T&(){return v;}
+	T operator *() const {return v;}
+};
+template <typename T> struct number_range 
+{
+	T b,e;
+	number_range(T b, T e):b(b),e(e){}
+	number_iterator<T> begin(){return b;}
+	number_iterator<T> end(){return e;}
+};
+template<typename T> number_range<T> range(T e) {return number_range<T>(0, e);}
+template<typename T> number_range<T> range(T b, T e) {return number_range<T>(b, e);}
+
+int i,j,k,l,r,m,n,T;
 int the[MAXX];
 
 int main()
@@ -55,6 +85,62 @@ int main()
 	${0}
 	return 0;
 }
+endsnippet
+
+snippet maintc "" b
+#include <algorithm>
+#include <bitset>
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <deque>
+#include <iterator>
+#include <list>
+#include <map>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <vector>
+
+
+#define MAXX 100111
+#define mod 1000000007ll
+typedef long long ll;
+class pii
+{
+	public:
+		int x,y;
+		pii(){}
+		pii(int a,int b):x(a),y(b){}
+		pii operator-(const pii &i)const {return pii(x-i.x,y-i.y);}
+		pii operator+(const pii &i)const {return pii(x+i.x,y+i.y);}
+		bool operator<(const pii &i)const{return x!=i.x?x<i.x:y<i.y;}
+		void input(){scanf("%d %d",&x,&y);}
+		void print()const{printf("(%d %d)",x,y);}
+};
+template<typename T> struct number_iterator : std::iterator<std::random_access_iterator_tag, T>
+{
+	T v;
+	number_iterator(T _v) : v(_v) {}
+	operator T&(){return v;}
+	T operator *() const {return v;}
+};
+template <typename T> struct number_range 
+{
+	T b,e;
+	number_range(T b, T e):b(b),e(e){}
+	number_iterator<T> begin(){return b;}
+	number_iterator<T> end(){return e;}
+};
+template<typename T> number_range<T> range(T e) {return number_range<T>(0, e);}
+template<typename T> number_range<T> range(T b, T e) {return number_range<T>(b, e);}
+
+int i,j,k,l,r,m,n,T;
+int the[MAXX];
 endsnippet
 
 snippet for "for(i=0;i<n;++i)"
@@ -512,7 +598,7 @@ public:
 endsnippet
 
 snippet modint "" b
-template<int m>class mod_int
+template<int m=1000000007>class mod_int
 {
 	public:
 		int val;
@@ -537,6 +623,32 @@ template<int m>class mod_int
 };
 endsnippet
 
+snippet modll "module long long" b
+template<long long m=1000000007ll>class mod_ll
+{
+	public:
+		long long val;
+		mod_ll():val(0){}
+		mod_ll(long long a):val((a%m+m)%m){}
+		mod_ll operator+(const mod_ll &i)const{return (val+i.val)%m;}
+		mod_ll operator-(const mod_ll &i)const{return (val-i.val+m)%m;}
+		mod_ll operator*(const mod_ll &i)const{return (val*i.val)%m;}
+		mod_ll operator=(const long long a){val=a; return *this;}
+		mod_ll operator+=(const mod_ll a){val=(val+a.val)%m; return *this;}
+		mod_ll operator*=(const mod_ll a){val=(val*a.val)%m; return *this;}
+		mod_ll operator-=(const mod_ll a){val=(val-a.val+m)%m; return *this;}
+		mod_ll operator^(int n)const
+		{
+			assert(n>=0);
+			mod_ll re(1);
+			for(mod_ll a(val);n;a*=a,n>>=1)
+				if(n&1)
+					re*=a;
+			return re;
+		}
+};
+endsnippet
+
 snippet power "" b
 template<class T>T power(T a,int n)
 {
@@ -547,4 +659,32 @@ template<class T>T power(T a,int n)
 			re*=a;
 	return re;
 }
+endsnippet
+
+snippet classdb "double with epsilon" b
+class DB
+{
+#define eps 1e-8
+	public:
+		double val;
+		DB():val(0){}
+		DB(double a):val(a){}
+		operator double()const{return val;}
+		DB operator+(const DB &i)const{return val+i.val;}
+		DB operator-(const DB &i)const{return val-i.val;}
+		DB operator*(const DB &i)const{return val*i.val;}
+		DB operator/(const DB &i)const{return val/i.val;}
+		DB operator=(const double i){return (val=i);}
+		DB operator+=(const DB &i){return (val+=i.val);}
+		DB operator-=(const DB &i){return (val-=i.val);}
+		DB operator*=(const DB &i){return (val*=i.val);}
+		DB operator/=(const DB &i){return (val/=i.val);}
+		bool operator==(const double i)const{return fabs(val-i)<eps;}
+		bool operator!=(const double i)const{return fabs(val-i)>eps;}
+		bool operator<(const double i)const{return val+eps<i;}
+		bool operator<=(const double i)const{return val<i+eps;}
+		bool operator>(const double i)const{return val>i+eps;}
+		bool operator>=(const double i)const{return val+eps>i;}
+#undef eps
+};
 endsnippet
